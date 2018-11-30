@@ -14,7 +14,7 @@ Support tools for J-GEM project
     Password: xxxx
 ## Edit observatory/instrument information in *jgeminfo.py*
 
-# Usge
+# Usage
 ## interactive planner viewer
     $ ./jgemobs.py -i  # for playground
     $ ./jgemobs.py -i --planner # for actual event planner
