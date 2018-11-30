@@ -1,2 +1,2 @@
-# jgemeasytools
-Easy tools for J-GEM project
+# jgemtools
+Support tools for J-GEM project
