@@ -6,6 +6,8 @@
 #     Ver 1.01   2018/11/26   H. Akitaya
 #     Ver 1.02   2018/11/28   H. Akitaya: Mexpected included in JSON file
 #     Ver 1.03   2018/11/29   H. Akitaya: Tables -> dictionary style, etc.
+#     Ver 1.04   2018/11/29   H. Akitaya: exception for invalid user/pass
+#                                         in readProcessorPy()
 #
 
 # to be imported from jgeminfo
@@ -112,6 +114,7 @@ class JgemPlanner(object):
             content = response.read()
         except:
             sys.stderr.write('Plannaer reading error. Check URL or user/passwd file.\n')
+            exit(1)
         return(content)
 
     def showEventTableHeaders(self):

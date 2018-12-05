@@ -3,6 +3,7 @@
 #    Sync obs data to the work area
 #
 #     Ver 1.0  2018/11/21   H. Akitaya
+#     Ver 1.1  2018/12/05   H. Akitaya; bug fix for no argument
 
 
 obsdir=/home/Student13/obs
@@ -16,9 +17,14 @@ usage()
 
 if [ $# -le 0 ]; then
     usage
+    exit
 fi
 
 datedir=$1
+if [ "${datedir}" == "" ]; then
+    usage
+    exit
+fi
 
 if [ ! -d ${obsdir}/${datedir} ]; then
     echo "${obsdir}/${datedir} not found."
