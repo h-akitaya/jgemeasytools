@@ -4,6 +4,7 @@
 #     J-GEM obs-id, group definition
 #
 #    Ver 1.0  2018/11/29  H. Akitaya
+#    Ver 1.1  2018/12/15  H. Akitaya; error check for line
 #
 
 import os, sys
@@ -43,12 +44,15 @@ class JgemIdGrp(object):
 
    @staticmethod
    def checkGroups(line):
-       groups = set([])
-       for obsid in JgemIdGrp.table:
-           pattern = re.compile(obsid)
-           if pattern.search(line):
+      groups = set([])
+      for obsid in JgemIdGrp.table:
+         pattern = re.compile(obsid)
+         try:
+            if pattern.search(line):
                groups.add(JgemIdGrp.table[obsid])
-       return groups
+         except:
+            return groups
+      return groups
 
 JgemIdGrp.table = {'Kanata-HONIR-OPT': 'A',
                    'Kanata-HONIR-IRA': 'A',

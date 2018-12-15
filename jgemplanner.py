@@ -8,6 +8,7 @@
 #     Ver 1.03   2018/11/29   H. Akitaya: Tables -> dictionary style, etc.
 #     Ver 1.04   2018/11/29   H. Akitaya: exception for invalid user/pass
 #                                         in readProcessorPy()
+#     Ver 1.05   2018/12/15   H. AKitaya: treat dist as string 
 #
 
 # to be imported from jgeminfo
@@ -150,7 +151,7 @@ class JgemPlanner(object):
         print('#%d events found.' % len(self.candidates))
         n=0
         for cnd in self.candidates:
-            showstr = '%20s %10s %10.9f %s %10.4f %10.4f %10.4f %s %s %s %s %s %s %s %s %s' % (cnd['galid'], cnd['eventid'], cnd['prob'], cnd['inserted'], cnd['ra'], cnd['dec'], cnd['dist'], cnd['OptExpected'], cnd['NirExpected'], cnd['state'], cnd['obsids'], cnd['updated'], cnd['filter and depth (5&sigma;AB)'], cnd['hastransient'], self.cndhc[n]['RA'], self.cndhc[n]['dec'] )
+            showstr = '%20s %10s %sf %s %10.4f %10.4f %s %s %s %s %s %s %s %s %s %s' % (cnd['galid'], cnd['eventid'], cnd['prob'], cnd['inserted'], cnd['ra'], cnd['dec'], cnd['dist'], cnd['OptExpected'], cnd['NirExpected'], cnd['state'], cnd['obsids'], cnd['updated'], cnd['filter and depth (5&sigma;AB)'], cnd['hastransient'], self.cndhc[n]['RA'], self.cndhc[n]['dec'] )
 
             flag_grpmatch = JgemIdGrp.isMatchGroups(cnd['obsids'], self.gids) 
             flag_print = True
