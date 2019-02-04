@@ -1,6 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 #  J-GEM planner analyser for SaCRA telescope (or other telescope)
+#     recomend to use at python3
 #   
 #     Ver 1.00   2018/11/22   H. Akitaya
 #     Ver 1.01   2018/11/26   H. Akitaya
@@ -9,6 +10,7 @@
 #     Ver 1.04   2018/11/29   H. Akitaya: exception for invalid user/pass
 #                                         in readProcessorPy()
 #     Ver 1.05   2018/12/15   H. AKitaya: treat dist as string 
+#     Ver 1.06   2019/02/04   H. AKitaya: python3 -> python in shebang
 #
 
 # to be imported from jgeminfo
@@ -47,6 +49,7 @@ class JgemPlanner(object):
         else:
             self.processor = PLANNER_URL
         self.imageserver = IMAGESERVER_URL
+        self.pythonversion = sys.version_info.major
 
     def setObsid(self, obsid):
         self.obsid = obsid
@@ -105,17 +108,33 @@ class JgemPlanner(object):
             sys.stderr.write('Image Server Access error. Check URL or user/passwd file.\n')
 
     def readProcessorPy(self, params):
-        query_string = urllib.parse.urlencode(params)
+        if self.pythonversion == 3:
+            query_string = urllib.parse.urlencode(params)
+        else:
+#            import urlparse
+            query_string = urllib.urlencode(params)
+
         url = self.processor + '?' + query_string
 #        print(url)
         basic_user_pass = JgemPlanner.readBasicAuthorizationUserPass()
-        request = urllib.request.Request(url=url, headers={"Authorization": "Basic " + basic_user_pass.decode('utf-8')})
-        try:
-            response = urllib.request.urlopen(request)
-            content = response.read()
-        except:
-            sys.stderr.write('Plannaer reading error. Check URL or user/passwd file.\n')
-            exit(1)
+        if self.pythonversion == 3: # Python3
+            request = urllib.request.Request(url=url, headers={"Authorization": "Basic " + basic_user_pass.decode('utf-8')})
+            try:
+                response = urllib.request.urlopen(request)
+                content = response.read()
+            except:
+                sys.stderr.write('Plannaer reading error. Check URL or user/passwd file.\n')
+                exit(1)
+        else:  # Python2
+            import urllib2
+            request = urllib2.Request(url=url, headers={"Authorization": "Basic " + basic_user_pass.decode('utf-8')})
+            try:
+                response = urllib2.urlopen(request)
+                content = response.read()
+            except:
+                sys.stderr.write('Plannaer reading error. Check URL or user/passwd file.\n')
+                exit(1)
+            
         return(content)
 
     def showEventTableHeaders(self):

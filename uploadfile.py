@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+#
+#   Ver 1.1 2019/02/24    H. Akitaya
+#        python3 -> python in shebang
+#
 
 import sys
 

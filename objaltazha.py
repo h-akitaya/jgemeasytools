@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 #
 #   Alt, Az, HA calculation
@@ -6,6 +6,7 @@
 #         getaltazha.py
 #
 #    Ver  1.0   2018/11/29  H. Akitaya
+#    Ver  1.1   2019/02/04  H. Akitaya; python3 -> python2 in shebang
 #
 
 # to be defined in jgeminfo.py
@@ -20,6 +21,10 @@ from astropy.time import Time
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 import jgeminfo
 import datetime
+from astropy.utils import iers
+#iers.IERS.iers_table = iers.IERS_A.open(iers.IERS_A_URL)
+
+
 
 class ObjAltAzHa(object):
     def __init__(self, ra_deg, dec_deg, time):

@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 #
 #   J-GEM easy sky map
 #
 #    Ver  1.0   2018/11/29  H. Akitaya
+#    Ver  1.1   2019/02/04  H. Akitaya; python3 -> python in shebang
 #
 
 import os, sys

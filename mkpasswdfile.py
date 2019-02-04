@@ -1,9 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 #  create encoded user and passwd file for 
 #           J-GEM planner and image server
 #
 #     Ver 1.0    2018/11/30
+#     Ver 1.1    2019/02/04  python3 -> python2 in shebang
+#                            handling both p2 and p3
 #
 
 import os, sys
@@ -21,7 +23,11 @@ def usage():
     print('Usage: mkpasswdfile.py')
     print('passuser file = %s' % (USERPASSWD_FN))
 
-user = input('User: ')
+if sys.version_info.major == 2:
+    user = raw_input('User: ')
+else:
+    user = input('User: ')
+    
 passwd = getpass.getpass('Password: ')
 
 user_passwd = '%s:%s' % (user, passwd)
