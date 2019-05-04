@@ -11,6 +11,7 @@
 #                                         in readProcessorPy()
 #     Ver 1.05   2018/12/15   H. AKitaya: treat dist as string 
 #     Ver 1.06   2019/02/04   H. AKitaya: python3 -> python in shebang
+#     Ver 1.10   2019/05/04   H. Akitaya: update for new J-GEM format
 #
 
 # to be imported from jgeminfo
@@ -50,6 +51,10 @@ class JgemPlanner(object):
             self.processor = PLANNER_URL
         self.imageserver = IMAGESERVER_URL
         self.pythonversion = sys.version_info.major
+        self.bands = DEFAULT_BANDS
+
+    def clearCandidates(self):
+        self.candidates = []
 
     def setObsid(self, obsid):
         self.obsid = obsid
@@ -67,6 +72,7 @@ class JgemPlanner(object):
             self.events.append(dict(zip(self.header_events, event)))
 
     def getCandidates(self):
+        self.clearCandidates()
         params = {'eventid': self.eventid, 'mode': 'candidate'}
         content = self.readProcessorPy(params)
         candidates = json.loads(content)
@@ -204,11 +210,11 @@ class JgemPlanner(object):
                   'obsdatetime': obsdatetime, 'observer': self.observer}
         content = self.readProcessorPy(params)
 
-    def markObserved(self, candidate, filters, obsdatetime, depth, hastransient):
+    def markObserved(self, candidate, filters, obsdatetime):
         params = {'eventid': self.eventid, 'mode': 'submit', 'obsid': self.obsid,
                   'galid': candidate, 'state': 'Observed', 'filter': filters,
-                  'depth': depth, 'obsdatetime': obsdatetime,
-                  'observer': self.observer, 'hastransient': hastransient}
+                  'obsdatetime': obsdatetime,
+                  'observer': self.observer}
         content = self.readProcessorPy(params)
 
     def eventExists(self):
@@ -242,7 +248,8 @@ class JgemPlanner(object):
         print('(n): show non-reserved/observed candidates')
         print('(ng): show non-reserved/observed candidates in groups')
         print('(t): show "hastransient" candidates')
-        print('(r NUMBER): mark RESERVED for the object with NUMBER')
+        print('(r NUMBER): mark "Reserved "for the object with NUMBER')
+        print('(o NUMBER): mark "Observed" for the object with NUMBER')
         print('(p NUMBER): telescope pointing for the object with NUMBER')
         print('(g): show defined groups')
         print('(g group1 group2 ...): set group(s) to be shown')
@@ -304,10 +311,16 @@ class JgemPlanner(object):
             if coms[0] == 'r' and len(coms) >= 2:
                 if IntPattern.search(coms[1]):
                     num = int(coms[1])
-                    print(num)
-                    for band in DEFAULT_BANDS:
-                        self.markReserved(self.candidates[num][0], band, obsdatetime)
-                        print('%s / %s / %s reserved.' % (self.candidates[num][0], self.eventid, band))
+                    for band in self.bands:
+                        self.markReserved(self.candidates[num]['galid'], band, obsdatetime)
+                        print('%s / %s / %s reserved.' % (self.candidates[num]['galid'], self.eventid, band))
+                    self.getCandidates()
+            elif coms[0] == 'o' and len(coms) >= 2:
+                if IntPattern.search(coms[1]):
+                    num = int(coms[1])
+                    for band in self.bands:
+                        self.markObserved(self.candidates[num]['galid'], band, obsdatetime)
+                        print('%s / %s / %s observed.' % (self.candidates[num]['galid'], self.eventid, band))
                     self.getCandidates()
             elif coms[0] == 'c' and len(coms) >= 2:
                 if self.setCurrentEventid(coms[1]):
@@ -326,7 +339,8 @@ class JgemPlanner(object):
             elif coms[0] == 'e':
                 self.showEvents()
             elif coms[0] == 'u':
-                self.notImplemented()
+                print("Update candidate list.")
+                self.getCandidates()
             elif coms[0] == 'n':
                 self.showCandidates(number=True, nonreserved=True)
             elif coms[0] == 'ng':

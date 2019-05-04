@@ -20,11 +20,12 @@ if __name__ == '__main__':
     candidate = sys.argv[1]
     obsfilter = sys.argv[3]
     
-    jgp = JgemPlanner()
-    jgp.setObsid('SaCRA')
+    jgp = JgemPlanner(planner=True)
+    jgp.setObsid('Kanata-HONIR')
 
     jgp.getEvents()
-    if not jgp.eventExists(event):
+    jgp.setCurrentEventid(event)
+    if not jgp.eventExists():
         print("Event not found. Abort")
         exit(2)
         
